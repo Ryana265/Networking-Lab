@@ -11,8 +11,7 @@ distanceVector[MAX_NODES][MAX_NODES], through[MAX_NODES][MAX_NODES];
 printf("Enter number of nodes: ");
 scanf("%d", &n);
 struct nodes node[n];
-printf("Enter the distance between each node (if there is no
-connection, input -1):\n");
+printf("Enter the distance between each node (if there is no connection, input -1):\n");
 for (i = 0; i < n; i++) {
 for (j = 0; j < n; j++) {
 if (i != j) {
