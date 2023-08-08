@@ -1,52 +1,27 @@
 // UDP Server
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-int main() {
-    int sockfd, portno, n;
-    socklen_t clilen;
-    char buffer[256];
-    struct sockaddr_in serv_addr, cli_addr;
-
-    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if (sockfd < 0) {
-        perror("Error opening socket");
-        exit(1);
-    }
-
-    bzero((char*) &serv_addr, sizeof(serv_addr));
-    portno = 1234;
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(portno);
-
-    if (bind(sockfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) < 0) {
-        perror("Error on binding");
-        exit(1);
-    }
-
-    clilen = sizeof(cli_addr);
-
-    bzero(buffer, 256);
-    n = recvfrom(sockfd, buffer, 255, 0, (struct sockaddr*) &cli_addr, &clilen);
-    if (n < 0) {
-        perror("Error reading from socket");
-        exit(1);
-    }
-
-    printf("Message from client: %s\n", buffer);
-
-    n = sendto(sockfd, "Server acknowledges your message", 30, 0, (struct sockaddr*) &cli_addr, clilen);
-    if (n < 0) {
-        perror("Error writing to socket");
-        exit(1);
-    }
-
-    close(sockfd);
+#include<stdio.h>
+#include<string.h>
+#include<sys/socket.h>
+#include<stdlib.h>
+#include<netdb.h>
+int main(int argc,char* argv[])
+{
+    struct sockaddr_in server,client;
+    if(argc!=2)
+    printf("Input format not correct");
+    int sockfd=socket(AF_INET,SOCK_DGRAM,0);
+    if(sockfd==-1)
+    printf("Error in socket();");
+    server.sin_family=AF_INET;
+    server.sin_addr.s_addr=INADDR_ANY;
+    server.sin_port=htons(atoi(argv[1]));
+    if(bind(sockfd,(struct sockaddr*)&server,sizeof(server))<0)
+    printf("Error in blind()! \n");
+    char buffer[100];
+    socklen_t server_len=sizeof(server);
+    printf("server waiting.....");
+    if(recvfrom(sockfd,buffer,100,0,(struct sockaddr*)&server,&server_len)<0)
+    printf("Error in recvfrom()!");
+    printf("Got a datagram:%s",buffer);
     return 0;
 }
